@@ -10,18 +10,19 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      PORT: ${{ secrets.PORT }}}
+      PORT: ${{ secrets.PORT }}
       EC2_PUBLIC_IP: ${{ secrets.EC2_PUBLIC_IP }}
       EC2_USER: ${{ secrets.EC2_USER }}
-      EC2_SSH_KEY: ${{ secrets.SSH_KEY}}
+      EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: '20'
 
       - name: Install dependencies for Node.js backend
         run: npm install
@@ -40,14 +41,15 @@ jobs:
         working-directory: ./react-app/
 
       - name: SSH into EC2 and deploy backend
-        uses: appleboy/ssh-action@v0.1.7
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_PUBLIC_IP }}
           username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.PORT }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
           script: |
             cd /home/ubuntu/mern-crud/mern-crud-app-master/nodejs-app
             git pull origin main
             npm install
             pm2 restart all
+
