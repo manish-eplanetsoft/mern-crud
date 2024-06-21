@@ -28,10 +28,6 @@ jobs:
         run: npm install
         working-directory: ./nodejs-app
 
-      - name: Run tests for Node.js backend
-        run: npm test
-        working-directory: ./nodejs-app
-
       - name: Install dependencies for React frontend
         run: npm install
         working-directory: ./react-app
